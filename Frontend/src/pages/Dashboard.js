@@ -136,7 +136,7 @@ function Dashboard() {
     <>
       <div className="grid grid-cols-1 col-span-12 lg:col-span-10 gap-6 md:grid-cols-3 lg:grid-cols-4  p-4 ">
         <article className="flex flex-col gap-4 rounded-lg border  border-gray-100 bg-white p-6  ">
-          <div className="inline-flex gap-2 self-end rounded bg-green-100 p-1 text-green-600">
+          <div className="inline-flex gap-2 self-end rounded bg-green-100 p-1 text-orange-600">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"

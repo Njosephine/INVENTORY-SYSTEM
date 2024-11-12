@@ -116,14 +116,14 @@ function Inventory() {
                     Last 7 days
                   </span>
                 </div>
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                   <span className="font-semibold text-gray-600 text-base">
                     Ugx 2000
                   </span>
                   <span className="font-thin text-gray-400 text-xs">
                     Revenue
                   </span>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="flex flex-col gap-3 p-10  w-full  md:w-3/12  sm:border-y-2 md:border-x-2 md:border-y-0">
