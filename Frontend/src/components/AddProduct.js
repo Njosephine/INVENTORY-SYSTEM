@@ -14,7 +14,7 @@ export default function AddProduct({
     manufacturer: "",
     description: "",
   });
-  const [imageFile, setImageFile] = useState(null); // State for storing the image file
+  const [imageFile, setImageFile] = useState(null);
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
 
@@ -23,7 +23,7 @@ export default function AddProduct({
   };
 
   const handleFileChange = (e) => {
-    setImageFile(e.target.files[0]); // Set the selected file
+    setImageFile(e.target.files[0]);
   };
 
   const addProduct = () => {
@@ -33,7 +33,7 @@ export default function AddProduct({
     formData.append("manufacturer", product.manufacturer);
     formData.append("description", product.description);
     if (imageFile) {
-      formData.append("image", imageFile); // Append the image file to the form data
+      formData.append("image", imageFile);
     }
 
     fetch("http://localhost:4000/api/product/add", {
@@ -50,12 +50,7 @@ export default function AddProduct({
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        initialFocus={cancelButtonRef}
-        onClose={setOpen}
-      >
+      <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -91,7 +86,6 @@ export default function AddProduct({
                       </Dialog.Title>
                       <form action="#">
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                          {/* Existing Fields */}
                           <div>
                             <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                               Name
@@ -106,7 +100,20 @@ export default function AddProduct({
                               placeholder="Ex. Apple iMac 27&ldquo;"
                             />
                           </div>
-                          {/* Add Image Upload Field */}
+                          <div>
+                            <label htmlFor="manufacturer" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                              Manufacturer
+                            </label>
+                            <input
+                              type="text"
+                              name="manufacturer"
+                              id="manufacturer"
+                              value={product.manufacturer}
+                              onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                              placeholder="Ex. Apple Inc."
+                            />
+                          </div>
                           <div>
                             <label htmlFor="image" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                               Upload Image
@@ -115,11 +122,10 @@ export default function AddProduct({
                               type="file"
                               name="image"
                               id="image"
-                              onChange={handleFileChange} // Handle file change
+                              onChange={handleFileChange}
                               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                             />
                           </div>
-                          {/* Description Field */}
                           <div className="sm:col-span-2">
                             <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                               Description
