@@ -11,6 +11,12 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    imageUrl: {
+      type: String,
+      requried: true,
+    },
+
     manufacturer: {
       type: String,
       required: true,
