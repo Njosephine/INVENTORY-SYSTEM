@@ -251,6 +251,9 @@ function Inventory() {
                       {element.name}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
+                      {element.imageUrl}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-2 text-gray-700">
                       {element.manufacturer}
                     </td>
                     <td className="whitespace-nowrap px-4 py-2 text-gray-700">
