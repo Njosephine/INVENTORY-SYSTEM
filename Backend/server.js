@@ -93,3 +93,7 @@ app.get("/testget", async (req,res)=>{
 
 // Here we are listening to the server
 app.listen(port, () => console.log(`Server started on PORT:${port}`))
+
+app.get("/", (req, res) => {
+  res.send("API Working")
+});
