@@ -8,7 +8,7 @@ import purchaseRoute from "./router/purchase.js";
 import salesRoute from "./router/sales.js";
 import User from "./models/users.js";
 import Product from "./models/product.js";
-
+import ERentalRoute from "./router/ERentalRoute.js";
 import dotenv from 'dotenv';
 dotenv.config();
 import {connectCloudinary} from "./config/cloudinary.js"
@@ -24,6 +24,7 @@ app.use(cors());
 
 // Store API
 app.use("/api/store", storeRoute);
+app.use("/api/rental", ERentalRoute);
 
 // Products API
 app.use("/api/product", productRoute);
