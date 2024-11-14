@@ -2,6 +2,7 @@ import  Product from "../models/product.js";
 import Purchase  from "../models/purchase.js";
 import  Sales  from "../models/sales.js";
 import { v2 as cloudinary } from "cloudinary";
+import mongoose from "mongoose"
 const addProduct = async (req, res) => {
   try {
     console.log("req: ", req.body.userId);
@@ -81,6 +82,7 @@ const updateSelectedProduct = async (req, res) => {
         name: req.body.name,
         manufacturer: req.body.manufacturer,
         description: req.body.description,
+        image : req.body.image,
       },
       { new: true }
     );
@@ -91,6 +93,7 @@ const updateSelectedProduct = async (req, res) => {
     res.status(402).send("Error");
   }
 };
+
 
 // Search Products
 const searchProduct = async (req, res) => {

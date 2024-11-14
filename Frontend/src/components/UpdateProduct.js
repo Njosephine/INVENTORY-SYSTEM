@@ -6,28 +6,19 @@ export default function UpdateProduct({
   updateProductData,
   updateModalSetting,
 }) {
-  const { _id, name, manufacturer, image, description } = updateProductData;
+  const { _id, name, manufacturer, description } = updateProductData;
   const [product, setProduct] = useState({
     productID: _id,
     name: name,
     manufacturer: manufacturer,
-    imageUrl: image,
     description: description,
   });
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
 
   const handleInputChange = (key, value) => {
+    console.log(key);
     setProduct({ ...product, [key]: value });
-  };
-
-  // Define handleFileChange to handle file input
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // You might want to handle file upload logic here, e.g., updating product's imageUrl
-      setProduct({ ...product, imageUrl: URL.createObjectURL(file) });
-    }
   };
 
   const updateProduct = () => {
@@ -115,18 +106,6 @@ export default function UpdateProduct({
                             />
                           </div>
                           <div>
-                            <label htmlFor="image" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                              Upload Image
-                            </label>
-                            <input
-                              type="file"
-                              name="image"
-                              id="image"
-                              onChange={handleFileChange}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                            />
-                          </div>
-                          <div>
                             <label
                               htmlFor="manufacturer"
                               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -162,11 +141,40 @@ export default function UpdateProduct({
                               onChange={(e) =>
                                 handleInputChange(e.target.name, e.target.value)
                               }
-                            />
+                            >
+                              Standard glass, 3.8GHz 8-core 10th-generation
+                              Intel Core i7 processor, Turbo Boost up to 5.0GHz,
+                              16GB 2666MHz DDR4 memory, Radeon Pro 5500 XT with
+                              8GB of GDDR6 memory, 256GB SSD storage, Gigabit
+                              Ethernet, Magic Mouse 2, Magic Keyboard - US
+                            </textarea>
                           </div>
                         </div>
                         <div className="flex items-center space-x-4">
-                          {/* Buttons for updating or deleting the product */}
+                          {/* <button
+                            type="submit"
+                            className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                          >
+                            Update product
+                          </button> */}
+                          {/* <button
+                            type="button"
+                            className="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+                          >
+                            <svg
+                              className="mr-1 -ml-1 w-5 h-5"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                            Delete
+                          </button> */}
                         </div>
                       </form>
                     </div>
