@@ -11,13 +11,14 @@ import Product from "./models/product.js";
 
 import dotenv from 'dotenv';
 dotenv.config();
-
+import {connectCloudinary} from "./config/cloudinary.js"
 import connectDB from "./config/mongodb.js"
 
 
 const app = express();
 const port = process.env.PORT || 4000
 connectDB()
+connectCloudinary()
 app.use(express.json());
 app.use(cors());
 

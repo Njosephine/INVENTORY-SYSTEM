@@ -1,7 +1,7 @@
 import  Product from "../models/product.js";
 import Purchase  from "../models/purchase.js";
 import  Sales  from "../models/sales.js";
-
+import { v2 as cloudinary } from "cloudinary";
 // Add Post
 const addProduct = (req, res) => {
   console.log("req: ", req.body.userId);
@@ -11,8 +11,13 @@ const addProduct = (req, res) => {
     manufacturer: req.body.manufacturer,
     stock: 0,
     description: req.body.description,
-    image: req.body.image,
+    image: imageUrl
   });
+  const imageFile = req.file
+
+    // upload image to cloudinary
+    const imageUpload = cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
+    const imageUrl = imageUpload.secure_url
 
   addProduct
     .save()
