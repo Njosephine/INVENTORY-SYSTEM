@@ -24,44 +24,51 @@ export default function AddProduct({
     setProduct({ ...product, [key]: value });
   };
 
-  const addProduct = () => {
-    fetch("http://localhost:4000/api/product/add", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(product),
-    })
-      .then((result) => {
-        alert("Product ADDED");
-        handlePageUpdate();
-        addProductModalSetting();
-      })
-      .catch((err) => console.log(err));
-  };
+  // Inside the addProduct function, make sure the image URL exists
+const addProduct = () => {
+  if (!product.image) {
+    alert("Please wait until the image is uploaded.");
+    return;
+  }
 
-  // Uploading image to Cloudinary
-  const uploadImage = async (image) => {
-    setIsUploading(true); // Start upload
-    const data = new FormData();
-    data.append("file", image);
-    data.append("upload_preset", "inventoryapp");
-
-    await fetch("https://api.cloudinary.com/v1_1/ddhayhptm/image/upload", {
-      method: "POST",
-      body: data,
+  fetch("http://localhost:4000/api/product/add", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(product),
+  })
+    .then((result) => {
+      alert("Product ADDED");
+      handlePageUpdate();
+      addProductModalSetting();
     })
-      .then((res) => res.json())
-      .then((data) => {
-        setProduct((prevProduct) => ({
-          ...prevProduct,
-          image: data.url,
-        }));
-        alert("Image Successfully Uploaded");
-      })
-      .catch((error) => console.log(error))
-      .finally(() => setIsUploading(false)); // End upload
-  };
+    .catch((err) => console.log(err));
+};
+
+// Modify the uploadImage function to directly call addProduct if needed
+const uploadImage = async (image) => {
+  setIsUploading(true);
+  const data = new FormData();
+  data.append("file", image);
+  data.append("upload_preset", "inventoryapp");
+
+  await fetch("https://api.cloudinary.com/v1_1/ddhayhptm/image/upload", {
+    method: "POST",
+    body: data,
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        image: data.url,
+      }));
+      alert("Image Successfully Uploaded");
+    })
+    .catch((error) => console.log(error))
+    .finally(() => setIsUploading(false));
+};
+
 
   return (
     <Transition.Root show={open} as={Fragment}>
