@@ -3,31 +3,43 @@ import Purchase  from "../models/purchase.js";
 import  Sales  from "../models/sales.js";
 import { v2 as cloudinary } from "cloudinary";
 // Add Post
-const addProduct = (req, res) => {
-  console.log("req: ", req.body.userId);
-  const addProduct = new Product({
-    userID: req.body.userId,
-    name: req.body.name,
-    manufacturer: req.body.manufacturer,
-    stock: 0,
-    description: req.body.description,
-    image: imageUrl
-  });
-  const imageFile = req.file
+const addProduct = async (req, res) => {
+  try {
+    console.log("req: ", req.body.userId);
 
-    // upload image to cloudinary
-    const imageUpload = cloudinary.uploader.upload(imageFile.path, { resource_type: "image" })
-    const imageUrl = imageUpload.secure_url
+    const imageFile = req.file;
+    if (!imageFile) {
+      return res.status(400).send("No image uploaded");
+    }
 
-  addProduct
-    .save()
-    .then((result) => {
-      res.status(200).send(result);
-    })
-    .catch((err) => {
-      res.status(402).send(err);
+    // Upload image to Cloudinary
+    const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+      resource_type: "image",
     });
+
+    // Extract the image URL from the upload response
+    const imageUrl = imageUpload.secure_url;
+
+    // Create new product with imageUrl
+    const newProduct = new Product({
+      userID: req.body.userId,
+      name: req.body.name,
+      manufacturer: req.body.manufacturer,
+      stock: 0, // Initial stock set to 0
+      description: req.body.description,
+      image: imageUrl, // Set image URL from Cloudinary
+    });
+
+    // Save product to the database
+    const result = await newProduct.save();
+    res.status(200).send(result); // Send the saved product as response
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error adding product");
+  }
 };
+
 
 // Get All Products
 const getAllProducts = async (req, res) => {
