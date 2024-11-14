@@ -11,7 +11,7 @@ const addProduct = (req, res) => {
     manufacturer: req.body.manufacturer,
     stock: 0,
     description: req.body.description,
-    imageUrl: req.body.imageUrl,
+    image: req.body.image,
   });
 
   addProduct
