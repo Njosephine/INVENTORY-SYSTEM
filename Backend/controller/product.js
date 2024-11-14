@@ -3,6 +3,7 @@ import Purchase  from "../models/purchase.js";
 import  Sales  from "../models/sales.js";
 import { v2 as cloudinary } from "cloudinary";
 // Add Post
+// Add Product
 const addProduct = async (req, res) => {
   try {
     console.log("req: ", req.body.userId);
@@ -16,6 +17,10 @@ const addProduct = async (req, res) => {
     const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
       resource_type: "image",
     });
+
+    if (!imageUpload || !imageUpload.secure_url) {
+      return res.status(500).send("Error uploading image to Cloudinary");
+    }
 
     // Extract the image URL from the upload response
     const imageUrl = imageUpload.secure_url;
@@ -35,7 +40,7 @@ const addProduct = async (req, res) => {
     res.status(200).send(result); // Send the saved product as response
 
   } catch (err) {
-    console.error(err);
+    console.error("Error: ", err);
     res.status(500).send("Error adding product");
   }
 };
