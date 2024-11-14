@@ -52,7 +52,7 @@ export default function AddProduct({
     })
       .then((res) => res.json())
       .then((data) => {
-        setForm({ ...form, image: data.url });
+        setProduct({ ...product, image: data.url });;
         alert("Store Image Successfully Uploaded");
       })
       .catch((error) => console.log(error));
