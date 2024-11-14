@@ -6,10 +6,12 @@ deleteSelectedProduct,
 updateSelectedProduct,
 searchProduct }from "../controller/product.js";
 
+import upload from '../Middleware/multer.js';
+
 const app = express();
 
 // Add Product
-app.post("/add", addProduct);
+app.post("/add",upload.single('image'), addProduct);
 
 // Get All Products
 app.get("/get/:userId", getAllProducts);
