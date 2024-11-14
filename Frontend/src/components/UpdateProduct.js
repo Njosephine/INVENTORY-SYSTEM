@@ -6,12 +6,12 @@ export default function UpdateProduct({
   updateProductData,
   updateModalSetting,
 }) {
-  const { _id, name, manufacturer, imageUrl, description } = updateProductData;
+  const { _id, name, manufacturer, image, description } = updateProductData;
   const [product, setProduct] = useState({
     productID: _id,
     name: name,
     manufacturer: manufacturer,
-    imageUrl: imageUrl,
+    imageUrl: image,
     description: description,
   });
   const [open, setOpen] = useState(true);
