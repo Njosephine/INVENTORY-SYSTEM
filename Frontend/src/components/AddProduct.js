@@ -2,6 +2,7 @@ import { Fragment, useContext, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import AuthContext from "../AuthContext";
+import UploadImage from "./UploadImage";
 
 export default function AddProduct({
   addProductModalSetting,
@@ -13,8 +14,9 @@ export default function AddProduct({
     name: "",
     manufacturer: "",
     description: "",
+    image: "",
   });
-  const [imageFile, setImageFile] = useState(null);
+  console.log("----",product)
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
 
@@ -22,23 +24,13 @@ export default function AddProduct({
     setProduct({ ...product, [key]: value });
   };
 
-  const handleFileChange = (e) => {
-    setImageFile(e.target.files[0]);
-  };
-
   const addProduct = () => {
-    const formData = new FormData();
-    formData.append("userId", product.userId);
-    formData.append("name", product.name);
-    formData.append("manufacturer", product.manufacturer);
-    formData.append("description", product.description);
-    if (imageFile) {
-      formData.append("image", imageFile);
-    }
-
     fetch("http://localhost:4000/api/product/add", {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(product),
     })
       .then((result) => {
         alert("Product ADDED");
@@ -48,9 +40,33 @@ export default function AddProduct({
       .catch((err) => console.log(err));
   };
 
+  // Uploading image to cloudinary
+  const uploadImage = async (image) => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "inventoryapp");
+
+    await fetch("https://api.cloudinary.com/v1_1/ddhayhptm/image/upload", {
+      method: "POST",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setForm({ ...form, image: data.url });
+        alert("Store Image Successfully Uploaded");
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
+    // Modal
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        initialFocus={cancelButtonRef}
+        onClose={setOpen}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -78,16 +94,25 @@ export default function AddProduct({
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                      <PlusIcon className="h-6 w-6 text-blue-400" aria-hidden="true" />
+                      <PlusIcon
+                        className="h-6 w-6 text-blue-400"
+                        aria-hidden="true"
+                      />
                     </div>
-                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                      <Dialog.Title as="h3" className="text-lg font-semibold leading-6 text-gray-900">
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left ">
+                      <Dialog.Title
+                        as="h3"
+                        className="text-lg font-semibold leading-6 text-gray-900 "
+                      >
                         Add Product
                       </Dialog.Title>
                       <form action="#">
                         <div className="grid gap-4 mb-4 sm:grid-cols-2">
                           <div>
-                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label
+                              htmlFor="name"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
                               Name
                             </label>
                             <input
@@ -95,13 +120,18 @@ export default function AddProduct({
                               name="name"
                               id="name"
                               value={product.name}
-                              onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder="Ex. Apple iMac 27&ldquo;"
                             />
                           </div>
                           <div>
-                            <label htmlFor="manufacturer" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label
+                              htmlFor="manufacturer"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
                               Manufacturer
                             </label>
                             <input
@@ -109,37 +139,108 @@ export default function AddProduct({
                               name="manufacturer"
                               id="manufacturer"
                               value={product.manufacturer}
-                              onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                              placeholder="Ex. Apple Inc."
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Ex. Apple"
+                            />
+                          </div>
+                          {/* <div>
+                            <label
+                              for="price"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                              Price
+                            </label>
+                            <input
+                              type="number"
+                              name="price"
+                              id="price"
+                              value={product.price}
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="$299"
                             />
                           </div>
                           <div>
-                            <label htmlFor="image" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                              Upload Image
+                            <label
+                              for="quantity"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                              Quantity
                             </label>
                             <input
-                              type="file"
-                              name="image"
-                              id="image"
-                              onChange={handleFileChange}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                              type="number"
+                              name="quantity"
+                              id="quantity"
+                              value={product.quantity}
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="0 - 999"
                             />
-                          </div>
+                          </div> */}
+
                           <div className="sm:col-span-2">
-                            <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label
+                              htmlFor="description"
+                              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
                               Description
                             </label>
                             <textarea
                               id="description"
                               rows="5"
                               name="description"
-                              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500"
+                              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               placeholder="Write a description..."
                               value={product.description}
-                              onChange={(e) => handleInputChange(e.target.name, e.target.value)}
-                            ></textarea>
+                              onChange={(e) =>
+                                handleInputChange(e.target.name, e.target.value)
+                              }
+                            >
+                              Standard glass, 3.8GHz 8-core 10th-generation
+                              Intel Core i7 processor, Turbo Boost up to 5.0GHz,
+                              16GB 2666MHz DDR4 memory, Radeon Pro 5500 XT with
+                              8GB of GDDR6 memory, 256GB SSD storage, Gigabit
+                              Ethernet, Magic Mouse 2, Magic Keyboard - US
+                            </textarea>
                           </div>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          <div>
+                            <UploadImage uploadImage={uploadImage} />
+                           </div> 
+                        </div>
+                        <div className="flex items-center space-x-4">
+                          {/* <button
+                            type="submit"
+                            className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                          >
+                            Update product
+                          </button> */}
+                          {/* <button
+                            type="button"
+                            className="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+                          >
+                            <svg
+                              className="mr-1 -ml-1 w-5 h-5"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                            Delete
+                          </button> */}
                         </div>
                       </form>
                     </div>
