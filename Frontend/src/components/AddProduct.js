@@ -41,10 +41,16 @@ export default function AddProduct({
       method: "POST",
       body: formData,
     })
+      .then((response) => response.json())
       .then((result) => {
         alert("Product ADDED");
         handlePageUpdate();
         addProductModalSetting();
+
+        // Assuming `result.imageUrl` is the URL returned from the backend
+        if (result.imageUrl) {
+          setProduct({ ...product, image: result.imageUrl });
+        }
       })
       .catch((err) => console.log(err));
   };
@@ -173,31 +179,37 @@ export default function AddProduct({
                                 handleInputChange(e.target.name, e.target.value)
                               }
                             >
-                              Standard glass, 3.8GHz 8-core 10th-generation
-                              Intel Core i7 processor, Turbo Boost up to 5.0GHz,
-                              16GB 2666MHz DDR4 memory, Radeon Pro 5500 XT with
-                              8GB of GDDR6 memory, 256GB SSD storage, Gigabit
-                              Ethernet, Magic Mouse 2, Magic Keyboard - US
+                              Standard glass, 3.8GHz 8-core...
                             </textarea>
                           </div>
+
+                          {product.image && (
+                            <div className="sm:col-span-2 mt-4">
+                              <img
+                                src={product.image}
+                                alt="Product"
+                                className="h-40 w-40 object-cover rounded"
+                              />
+                            </div>
+                          )}
                         </div>
                       </form>
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
                     onClick={addProduct}
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto sm:text-sm"
                   >
                     Add Product
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                    onClick={() => addProductModalSetting()}
+                    onClick={addProductModalSetting}
                     ref={cancelButtonRef}
+                    className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
                   >
                     Cancel
                   </button>
